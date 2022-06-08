@@ -4,16 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"net/url"
-	"strings"
 )
 
 // SendSms Send an SMS message
 // Docs: https://developer.telesign.com/enterprise/reference/post_v1-messaging
 func (c *Client) SendSms(req *SendSmsReq) (*SendSmsResp, error) {
-	// convert the spaces into "%20" first, later we replace all "%2520" into "%20"
-	t := url.URL{Path: req.Message}
-	req.Message = t.String()
 	bytes, err := c.execute(req)
 	if err != nil {
 		return nil, err
@@ -56,7 +51,6 @@ func (r *SendSmsReq) GetPath() string {
 // GetBody return body request
 func (r *SendSmsReq) GetBody() string {
 	b := structToURLValues(r).Encode()
-	b = strings.ReplaceAll(b, "%2520", "%20")
 	return b
 }
 

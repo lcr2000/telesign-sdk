@@ -4,16 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"net/url"
-	"strings"
 )
 
 // SendSmsVerify Send SMS Verification Code
 // Docs: https://developer.telesign.com/enterprise/reference/sendsmsverificationcode
 func (c *Client) SendSmsVerify(req *SendSmsVerifyReq) (*SendSmsVerifyResp, error) {
-	// convert the spaces into "%20" first, later we replace all "%2520" into "%20"
-	t := url.URL{Path: req.Template}
-	req.Template = t.String()
 	bytes, err := c.execute(req)
 	if err != nil {
 		return nil, err
@@ -56,7 +51,6 @@ func (r *SendSmsVerifyReq) GetPath() string {
 // GetBody return body request
 func (r *SendSmsVerifyReq) GetBody() string {
 	b := structToURLValues(r).Encode()
-	b = strings.ReplaceAll(b, "%2520", "%20")
 	return b
 }
 
